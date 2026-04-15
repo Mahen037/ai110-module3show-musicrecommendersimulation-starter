@@ -24,17 +24,29 @@ Each `UserProfile` stores:
 - target energy
 - whether the user prefers acoustic songs
 
-How scoring works:
-1. Give points if genre matches.
-2. Give points if mood matches.
-3. Add a closeness score for energy (closer to target = better).
-4. Add acousticness score based on `likes_acoustic`.
-5. Combine with weights into one final score.
+### Algorithm Recipe
 
-How recommendations are chosen:
-- Score every song.
-- Sort by score from highest to lowest.
-- Return the top `k` songs.
+For each song, the recommender computes:
+
+- `genre_match = 1` if genre matches user favorite, else `0`
+- `mood_match = 1` if mood matches user favorite, else `0`
+- `energy_score = max(0, 1 - abs(song.energy - user.target_energy))`
+- `acoustic_score = song.acousticness` if `likes_acoustic=True`, else `1 - song.acousticness`
+
+Final weighted score:
+
+`score = 0.40*genre_match + 0.25*mood_match + 0.20*energy_score + 0.15*acoustic_score`
+
+Recommendation steps:
+1. Score every song.
+2. Sort songs by score from highest to lowest.
+3. Return top `k` songs.
+
+### Potential Biases
+
+This system may over-prioritize genre, which can hide songs that match mood and energy well but are in different genres.  
+Because the dataset is small, recommendations may reflect a narrow taste range and repeat similar songs.
+
 
 ---
 
