@@ -135,104 +135,79 @@ I also learned that bias and unfairness can show up when one feature is weighted
 
 Combines reflection and model card framing from the Module 3 guidance. :contentReference[oaicite:2]{index=2}  
 
-```markdown
-# 🎧 Model Card - Music Recommender Simulation
+# 🎧 Model Card: Music Recommender Simulation
 
-## 1. Model Name
+## 1. Model Name  
 
-Give your recommender a name, for example:
-
-> VibeFinder 1.0
+**VibeFinder 1.0** 
 
 ---
 
-## 2. Intended Use
+## 2. Intended Use  
+This recommender suggests a small set of songs from a fixed catalog based on a user's preferred genre, mood, energy level, and acoustic preference. It is designed for classroom exploration and testing, not for real-world music recommendation.
 
-- What is this system trying to do
-- Who is it for
+It assumes user taste can be represented with a few simple preferences and that similar songs can be ranked using a weighted score.
 
-Example:
+![Results](results.png)
 
-> This model suggests 3 to 5 songs from a small catalog based on a user's preferred genre, mood, and energy level. It is for classroom exploration only, not for real users.
-
----
-
-## 3. How It Works (Short Explanation)
-
-Describe your scoring logic in plain language.
-
-- What features of each song does it consider
-- What information about the user does it use
-- How does it turn those into a number
-
-Try to avoid code in this section, treat it like an explanation to a non programmer.
 
 ---
 
-## 4. Data
+## 3. How the Model Works  
 
-Describe your dataset.
+The model compares each song to a user profile using genre, mood, energy, and acousticness. A song gets points when its genre matches the user’s favorite genre, when its mood matches, when its energy is close to the user’s target energy, and when its acousticness fits the user’s preference.
 
-- How many songs are in `data/songs.csv`
-- Did you add or remove any songs
-- What kinds of genres or moods are represented
-- Whose taste does this data mostly reflect
+The final recommendation score is a weighted sum of those feature matches. I changed the starter logic by increasing the importance of energy and reducing the importance of genre, so energy differences have more influence on the ranking.
 
----
+![Flow/Diagram](mermaid.png)
 
-## 5. Strengths
-
-Where does your recommender work well
-
-You can think about:
-- Situations where the top results "felt right"
-- Particular user profiles it served well
-- Simplicity or transparency benefits
 
 ---
 
-## 6. Limitations and Bias
+## 4. Data  
 
-Where does your recommender struggle
+The model uses a small CSV catalog of songs with attributes like genre, mood, energy, tempo, valence, danceability, and acousticness. The dataset is limited, so only a few music styles and moods are represented.
 
-Some prompts:
-- Does it ignore some genres or moods
-- Does it treat all users as if they have the same taste shape
-- Is it biased toward high energy or one genre by default
-- How could this be unfair if used in a real product
+Because the catalog is small, some preferences may be underrepresented. That means the recommender may repeat similar songs or miss more diverse matches.
+
 
 ---
 
-## 7. Evaluation
+## 5. Strengths  
 
-How did you check your system
+The system works well when a user has clear preferences and those preferences match features in the catalog. It can give reasonable results for users who care about genre, mood, and energy in a simple way.
 
-Examples:
-- You tried multiple user profiles and wrote down whether the results matched your expectations
-- You compared your simulation to what a real app like Spotify or YouTube tends to recommend
-- You wrote tests for your scoring logic
+It also explains recommendations clearly, which makes it easy to understand why a song was ranked highly.
+---
 
-You do not need a numeric metric, but if you used one, explain what it measures.
+## 6. Limitations and Bias 
+
+The model does not consider lyrics, artist familiarity, listening history, or context like time of day. It also may favor users whose tastes match the most common patterns in the dataset.
+
+If genre is weighted too strongly, the recommender can become repetitive and ignore good matches in other categories. Users with unusual or conflicting tastes may get less useful recommendations.
 
 ---
 
-## 8. Future Work
+## 7. Evaluation  
 
-If you had more time, how would you improve this recommender
+I tested the recommender with several user profiles, including normal profiles and adversarial edge cases. I looked at the top-ranked songs and checked whether the explanations matched the scores.
 
-Examples:
+I also changed the feature weights to see whether rankings changed in meaningful ways. This helped show whether the system was sensitive to energy and genre in a balanced way.
 
-- Add support for multiple users and "group vibe" recommendations
-- Balance diversity of songs instead of always picking the closest match
-- Use more features, like tempo ranges or lyric themes
+![Updated](updatedResults.png)
 
 ---
 
-## 9. Personal Reflection
+## 8. Future Work  
 
-A few sentences about what you learned:
+The model could be improved by adding more features, such as tempo, valence, or danceability. It would also help to use a larger and more diverse song catalog.
 
-- What surprised you about how your system behaved
-- How did building this change how you think about real music recommenders
-- Where do you think human judgment still matters, even if the model seems "smart"
+A better version could include diversity logic so the top results are not too similar to each other. It could also provide stronger explanations and learn from user feedback over time.
 
+---
+
+## 9. Personal Reflection  
+
+I learned that recommender systems turn data into predictions by converting user preferences and item features into scores. I also learned that small changes in weights can have a big effect on ranking.
+
+One interesting result was how easily the recommender could over-focus on one feature, especially with a small dataset. This changed the way I think about music apps, because even simple recommendation systems can shape what users see in a strong and biased way.
