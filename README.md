@@ -2,32 +2,39 @@
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
-
-Your goal is to:
-
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
-
+I built a small music recommender that picks songs by comparing each song’s features to a user profile.  
+The system checks genre, mood, energy level, and acoustic preference, gives each song a score, and returns the top matches.  
+The goal is to make the logic simple and transparent so it is easy to explain why a song was recommended.
 ---
 
 ## How The System Works
 
-Explain your design in plain language.
+Each `Song` includes:
+- genre
+- mood
+- energy
+- tempo
+- valence
+- danceability
+- acousticness
 
-Some prompts to answer:
+Each `UserProfile` stores:
+- favorite genre
+- favorite mood
+- target energy
+- whether the user prefers acoustic songs
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+How scoring works:
+1. Give points if genre matches.
+2. Give points if mood matches.
+3. Add a closeness score for energy (closer to target = better).
+4. Add acousticness score based on `likes_acoustic`.
+5. Combine with weights into one final score.
 
-You can include a simple diagram or bullet list if helpful.
+How recommendations are chosen:
+- Score every song.
+- Sort by score from highest to lowest.
+- Return the top `k` songs.
 
 ---
 
