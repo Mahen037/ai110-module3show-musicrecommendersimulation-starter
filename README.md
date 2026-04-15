@@ -90,20 +90,25 @@ You can add more tests in `tests/test_recommender.py`.
 Use this section to document the experiments you ran. For example:
 
 - What happened when you changed the weight on genre from 2.0 to 0.5
+ANS. Reducing the genre weight shifted the recommender from a rule-dominated system (genre-heavy) to a similarity-based system, where continuous features (energy, acousticness) had more influence. This resulted in more balanced but less clearly differentiated recommendations.
 - What happened when you added tempo or valence to the score
 - How did your system behave for different types of users
+ANS. When user preferences conflict, the system defaults to whichever feature has the highest weight, often ignoring other mismatched preferences.
+For extreme user profiles, the recommender becomes less flexible and repeatedly surfaces a small subset of songs that best match those extremes. 
+For users with moderate or unclear preferences, the system produces less differentiated recommendations, as many items satisfy the criteria equally well.
+The system does not explicitly resolve trade-offs between conflicting preferences, leading to inconsistent or unintuitive recommendations.
 
 ---
 
 ## Limitations and Risks
 
 Summarize some limitations of your recommender.
-
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
+- Works on a small, fixed dataset, limiting diversity
+- Relies on manually set weights, which can bias results
+- Does not understand audio content or lyrics
+- Uses simple similarity metrics that may not reflect human perception
+- Struggles with conflicting user preferences
+- Does not learn from user feedback over time
 
 You will go deeper on this in your model card.
 
@@ -120,6 +125,9 @@ Write 1 to 2 paragraphs here about what you learned:
 - about how recommenders turn data into predictions
 - about where bias or unfairness could show up in systems like this
 
+ANS. I learned that recommenders turn raw data into predictions by converting user preferences and item features into scores. In this project, the system compares each song’s genre, mood, energy, and acousticness against a user profile, then uses weighted logic to rank songs from best match to worst match. Small changes to the weights can noticeably change the results, which shows how much recommender behavior depends on the design of the scoring function.
+
+I also learned that bias and unfairness can show up when one feature is weighted too strongly or when the dataset is too small and repetitive. If genre is overemphasized, the system may keep recommending similar songs and ignore good matches in other categories. A recommender can also be unfair if it reflects only a narrow set of tastes, because users with different preferences may get fewer relevant or diverse results.
 
 ---
 
